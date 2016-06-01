@@ -3,7 +3,7 @@
 chdir(dirname(__DIR__));
 require './vendor/autoload.php';
 
-use ittech227\ticker\Callback\Callback;
+use zaboy\sheduler\Callback\Callback;
 use \Xiag\Rql\Parser\Node\LimitNode;
 use \Xiag\Rql\Parser\Node\SortNode;
 use \Xiag\Rql\Parser\Node\SelectNode;

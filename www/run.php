@@ -3,7 +3,7 @@
 chdir(dirname(__DIR__));
 require './vendor/autoload.php';
 
-use ittech227\ticker\Ticker;
+use zaboy\sheduler\Ticker;
 
 $timer = new Ticker( );
 $timer->start();
