@@ -3,7 +3,7 @@
 chdir(dirname(__DIR__));
 require './vendor/autoload.php';
 
-use zaboy\sheduler\Ticker;
+use zaboy\scheduler\Ticker;
 
-$timer = new Ticker( );
+$timer = new Ticker();
 $timer->start();

@@ -3,7 +3,7 @@
 chdir(dirname(__DIR__));
 require './vendor/autoload.php';
 
-use zaboy\sheduler\Callback\Callback;
+use zaboy\scheduler\Callback\Callback;
 use \Xiag\Rql\Parser\Node\LimitNode;
 use \Xiag\Rql\Parser\Node\SortNode;
 use \Xiag\Rql\Parser\Node\SelectNode;
@@ -28,8 +28,13 @@ array_walk($itemData, function (&$item, $key) use ($options) {
 $log->create($itemData);
 
 // Clears old records in the log
-$config = $container->get('config')['ticker']['log'][$logType];
-$maxLogRows = $config['max_log_rows'];
+if (isset($options[$logType . '_max_log_rows'])) {
+    $maxLogRows = $options[$logType . '_max_log_rows'];
+} else {
+    $config = $container->get('config')['ticker']['log'][$logType];
+    $maxLogRows = $config['max_log_rows'];
+}
+var_dump($logType . ': ' . $maxLogRows);
 
 $query = new \Xiag\Rql\Parser\Query();
 $query->setSelect(new SelectNode(['id']));

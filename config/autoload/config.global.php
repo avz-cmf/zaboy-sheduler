@@ -12,6 +12,9 @@ return [
             'filename' => getcwd() . '/logs/hop.log',
             'delimiter' => ';',
         ],
+        'timeline_datastore' => [
+            'class' => 'zaboy\scheduler\DataStore\Timeline',
+        ],
     ],
     'ticker' => [
         'log' => [

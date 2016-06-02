@@ -19,6 +19,8 @@ class TickerTest extends \PHPUnit_Framework_TestCase
         $this->runCmdPattern = "php ";
         $this->runCmdPattern .= realpath(dirname(__DIR__) . '/../www/run.php');
         $this->runCmdPattern .= " -total_time %d -step %s";
+        $this->runCmdPattern .= " -tick_max_log_rows %d";
+        $this->runCmdPattern .= " -hop_max_log_rows %d";
         $this->runCmdPattern .= " &";
 
         $container = include './config/container.php';
@@ -34,9 +36,9 @@ class TickerTest extends \PHPUnit_Framework_TestCase
 
         $totalTime = 3;
 
-        $cmd = sprintf($this->runCmdPattern, $totalTime, 0.1);
+        $cmd = sprintf($this->runCmdPattern, $totalTime, 0.1, 600, 100);
         pclose(
-                popen($cmd, 'w')
+            popen($cmd, 'w')
         );
         sleep($totalTime + 1);
 
@@ -51,7 +53,7 @@ class TickerTest extends \PHPUnit_Framework_TestCase
 
         $totalTime = 10;
 
-        $cmd = sprintf($this->runCmdPattern, $totalTime, 5);
+        $cmd = sprintf($this->runCmdPattern, $totalTime, 5, 600, 100);
         pclose(
                 popen($cmd, 'w')
         );
@@ -63,21 +65,20 @@ class TickerTest extends \PHPUnit_Framework_TestCase
 
     public function test_clearLog()
     {
-        $totalTime = $this->config['tick']['max_log_rows'] / 10;
-        if ($totalTime < 1) {
-            $totalTime = 1;
-        }
+        $totalTime = 3;
         // Do not clear log files after previous test
-        $cmd = sprintf($this->runCmdPattern, $totalTime, 0.1);
+        $cmd = sprintf($this->runCmdPattern, $totalTime, 0.1, 30, 1);
         pclose(
-                popen($cmd, 'w')
+            popen($cmd, 'w')
         );
         sleep($totalTime + 1);
 
         $this->assertEquals(
-                $this->config['tick']['max_log_rows'], $this->tickLog->count()
+            30, $this->tickLog->count()
         );
-        $this->assertEquals(1, $this->hopLog->count());
+        $this->assertEquals(
+            1, $this->hopLog->count()
+        );
     }
 
 }

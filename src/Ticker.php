@@ -1,8 +1,8 @@
 <?php
 
-namespace zaboy\sheduler;
+namespace zaboy\scheduler;
 
-use zaboy\sheduler\Callback\Callback;
+use zaboy\scheduler\Callback\Callback;
 
 class Ticker
 {
@@ -32,16 +32,23 @@ class Ticker
     /**
      * Callback which called every tick
      *
-     * @var \zaboy\sheduler\Callback\Callback
+     * @var \zaboy\scheduler\Callback\Callback
      */
     protected $tick_callback;
 
     /**
      * Callback which called in the start
      *
-     * @var \zaboy\sheduler\Callback\Callback
+     * @var \zaboy\scheduler\Callback\Callback
      */
     protected $hop_callback;
+
+    /**
+     * Options for passing to callback
+     *
+     * @var array
+     */
+    protected $callbackOptions;
 
     /**
      * Ticker constructor.
@@ -85,6 +92,8 @@ class Ticker
         foreach ($options as $key => $value) {
             if (property_exists($this, $key)) {
                 $this->{$key} = $value;
+            } else {
+                $this->callbackOptions[$key] = $value;
             }
         }
     }
@@ -116,10 +125,10 @@ class Ticker
      */
     public function preRunHopCallback()
     {
-        $this->hop_callback->call([
+        $this->hop_callback->call(array_merge([
             'hop_start' => $this->getTickId(),
             'ttl' => $this->total_time,
-        ]);
+        ], $this->callbackOptions));
     }
 
     /**
@@ -143,10 +152,10 @@ class Ticker
         do {
             $startIterationTime = microtime(1);
             // calling tick callback
-            $this->tick_callback->call([
+            $this->tick_callback->call(array_merge([
                 'tick_id' => $this->getTickId(),
                 'step' => $this->step,
-            ]);
+            ], $this->callbackOptions));
             // Checks runtime of callback; if greater than step - triggers notice
             if ((microtime(1) - $startIterationTime) > $this->step) {
                 trigger_error("The call callback took too much time. The ticker could lose the right tact.");

@@ -4,10 +4,9 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "12f099e454cd344bdce1b1867f182218",
-    "content-hash": "28c9f91e09b60cf203dd035abf67941d",
-    "packages": [],
-    "packages-dev": [
+    "hash": "6a8dd14eda0b7c13635f6d3d291442e7",
+    "content-hash": "8a3a97bcf08d2c9d04eab20202bc028e",
+    "packages": [
         {
             "name": "avz-cmf/zaboy-rest",
             "version": "3.3.0",
@@ -1045,6 +1044,7 @@
             "time": "2016-03-24 22:10:30"
         }
     ],
+    "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": [],

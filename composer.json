@@ -11,12 +11,12 @@
     },
     "autoload": {
         "psr-4": {
-            "zaboy\\sheduler\\": "src/"
+            "zaboy\\scheduler\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "zaboy\\test\\sheduler\\": "test/src/"
+            "zaboy\\test\\scheduler\\": "test/src/"
         }
     },
     "suggest": {

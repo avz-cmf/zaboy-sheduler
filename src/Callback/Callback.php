@@ -1,8 +1,8 @@
 <?php
 
-namespace zaboy\sheduler\Callback;
+namespace zaboy\scheduler\Callback;
 
-use zaboy\sheduler\Callback\CallbackException;
+use zaboy\scheduler\Callback\CallbackException;
 
 class Callback
 {
@@ -27,7 +27,7 @@ class Callback
      *
      * @param $argv
      * @return array
-     * @throws \zaboy\sheduler\Callback\CallbackException
+     * @throws \zaboy\scheduler\Callback\CallbackException
      */
     public static function parseCommandLineParameters($argv)
     {
