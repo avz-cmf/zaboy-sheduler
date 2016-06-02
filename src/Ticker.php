@@ -14,6 +14,10 @@ class Ticker
 
     const DEFAULT_HOP_CALLBACK = 'scripts/hop.php';
 
+    const TICK_PARAMS_PREFIX = 'tick__';
+
+    const HOP_PARAMS_PREFIX = 'hop__';
+
     /**
      * Tick frequence in seconds
      *
@@ -44,11 +48,18 @@ class Ticker
     protected $hop_callback;
 
     /**
-     * Options for passing to callback
+     * Options for passing to tick callback
      *
      * @var array
      */
-    protected $callbackOptions;
+    protected $tickCallbackParams = [];
+
+    /**
+     * Options for passing to hop callback
+     *
+     * @var array
+     */
+    protected $hopCallbackParams = [];
 
     /**
      * Ticker constructor.
@@ -90,11 +101,21 @@ class Ticker
     {
         $this->options = array();
         foreach ($options as $key => $value) {
+            // If param match pattern 'tick__param1 val1'
+            if (substr_compare($key, self::TICK_PARAMS_PREFIX, 0, strlen(self::TICK_PARAMS_PREFIX)) == 0) {
+                $tickKey = substr($key, strlen(self::TICK_PARAMS_PREFIX));
+                $this->tickCallbackParams[$tickKey] = $value;
+            }
+            // If param match pattern 'hop__param1 val1'
+            if (substr_compare($key, self::HOP_PARAMS_PREFIX, 0, strlen(self::HOP_PARAMS_PREFIX)) == 0) {
+                $hopKey = substr($key, strlen(self::HOP_PARAMS_PREFIX));
+                $this->hopCallbackParams[$hopKey] = $value;
+            }
+            // Properties of class
             if (property_exists($this, $key)) {
                 $this->{$key} = $value;
-            } else {
-                $this->callbackOptions[$key] = $value;
             }
+            // rest parameters are ignored
         }
     }
 
@@ -128,7 +149,7 @@ class Ticker
         $this->hop_callback->call(array_merge([
             'hop_start' => $this->getTickId(),
             'ttl' => $this->total_time,
-        ], $this->callbackOptions));
+        ], $this->hopCallbackParams));
     }
 
     /**
@@ -155,7 +176,7 @@ class Ticker
             $this->tick_callback->call(array_merge([
                 'tick_id' => $this->getTickId(),
                 'step' => $this->step,
-            ], $this->callbackOptions));
+            ], $this->tickCallbackParams));
             // Checks runtime of callback; if greater than step - triggers notice
             if ((microtime(1) - $startIterationTime) > $this->step) {
                 trigger_error("The call callback took too much time. The ticker could lose the right tact.");

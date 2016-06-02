@@ -19,14 +19,12 @@ class TickerTest extends \PHPUnit_Framework_TestCase
         $this->runCmdPattern = "php ";
         $this->runCmdPattern .= realpath(dirname(__DIR__) . '/../www/run.php');
         $this->runCmdPattern .= " -total_time %d -step %s";
-        $this->runCmdPattern .= " -tick_max_log_rows %d";
-        $this->runCmdPattern .= " -hop_max_log_rows %d";
         $this->runCmdPattern .= " &";
 
         $container = include './config/container.php';
         $this->tickLog = $container->get('tick_log_datastore');
         $this->hopLog = $container->get('hop_log_datastore');
-        $this->config = $container->get('config')['ticker']['log'];
+        $this->config = $container->get('config')['ticker'];
     }
 
     public function test_tickerInTenthsPartOfSeconds()
@@ -36,7 +34,7 @@ class TickerTest extends \PHPUnit_Framework_TestCase
 
         $totalTime = 3;
 
-        $cmd = sprintf($this->runCmdPattern, $totalTime, 0.1, 600, 100);
+        $cmd = sprintf($this->runCmdPattern, $totalTime, 0.1);
         pclose(
             popen($cmd, 'w')
         );
@@ -53,7 +51,7 @@ class TickerTest extends \PHPUnit_Framework_TestCase
 
         $totalTime = 10;
 
-        $cmd = sprintf($this->runCmdPattern, $totalTime, 5, 600, 100);
+        $cmd = sprintf($this->runCmdPattern, $totalTime, 5);
         pclose(
                 popen($cmd, 'w')
         );
@@ -65,9 +63,15 @@ class TickerTest extends \PHPUnit_Framework_TestCase
 
     public function test_clearLog()
     {
+        // Add limits for log files
+        $cmd = rtrim($this->runCmdPattern, '&');
+        $cmd .= " -tick__max_log_rows %d";
+        $cmd .= " -hop__max_log_rows %d";
+        $cmd .= ' &';
+
         $totalTime = 3;
         // Do not clear log files after previous test
-        $cmd = sprintf($this->runCmdPattern, $totalTime, 0.1, 30, 1);
+        $cmd = sprintf($cmd, $totalTime, 0.1, 30, 1);
         pclose(
             popen($cmd, 'w')
         );

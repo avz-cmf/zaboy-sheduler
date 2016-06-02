@@ -17,13 +17,15 @@ return [
         ],
     ],
     'ticker' => [
-        'log' => [
-            'tick' => [
+        'tick' => [
+            'callbackParams' => [
                 'max_log_rows' => 600,
             ],
-            'hop' => [
+        ],
+        'hop' => [
+            'callbackParams' => [
                 'max_log_rows' => 600,
             ],
-        ]
+        ],
     ]
 ];
