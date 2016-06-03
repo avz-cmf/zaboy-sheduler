@@ -3,12 +3,12 @@
 chdir(dirname(__DIR__));
 require './vendor/autoload.php';
 
-use \zaboy\scheduler\Callback\Callback;
+use \zaboy\scheduler\Callback\Script;
 use \Xiag\Rql\Parser\Node\LimitNode;
 use \Xiag\Rql\Parser\Node\SortNode;
 use \Xiag\Rql\Parser\Node\SelectNode;
 
-$options = Callback::parseCommandLineParameters($_SERVER['argv']);
+$options = Script::parseCommandLineParameters($_SERVER['argv']);
 
 /** @var Zend\ServiceManager\ServiceManager $container */
 $container = include './config/container.php';
@@ -21,7 +21,7 @@ $log = $container->get($serviceName);
 $itemData = array_flip($columns);
 array_walk($itemData, function (&$item, $key) use ($options) {
     if (!isset($options[$key])) {
-        throw new Exception("Expected necessary paramter \"{$key}\"");
+        throw new Exception("Expected necessary parameter \"{$key}\"");
     }
     $item = $options[$key];
 });

@@ -2,24 +2,32 @@
 
 namespace zaboy\scheduler;
 
-use zaboy\scheduler\Callback\Callback;
+use zaboy\scheduler\Callback\Interfaces\CallbackInterface;
 
 class Ticker
 {
+    /**
+     * After this time crontab must restart Ticker again (by default)
+     */
     const DEFAULT_TOTAL_TIME = 60;
 
+    /**
+     * Tick frequence by default in seconds
+     */
     const DEFAULT_STEP = 1;
 
-    const DEFAULT_TICK_CALLBACK = 'scripts/tick.php';
-
-    const DEFAULT_HOP_CALLBACK = 'scripts/hop.php';
-
+    /**
+     * The prefix for command line parameters for passing to the tick_callback
+     */
     const TICK_PARAMS_PREFIX = 'tick__';
 
+    /**
+     * The prefix for command line parameters for passing to the hop_callback
+     */
     const HOP_PARAMS_PREFIX = 'hop__';
 
     /**
-     * Tick frequence in seconds
+     * Tick frequency in seconds
      *
      * Minimum tested stable value is 0.1 sec
      * @var float | int
@@ -36,14 +44,14 @@ class Ticker
     /**
      * Callback which called every tick
      *
-     * @var \zaboy\scheduler\Callback\Callback
+     * @var \zaboy\scheduler\Callback\Interfaces
      */
     protected $tick_callback;
 
     /**
      * Callback which called in the start
      *
-     * @var \zaboy\scheduler\Callback\Callback
+     * @var \zaboy\scheduler\Callback\Interfaces
      */
     protected $hop_callback;
 
@@ -66,12 +74,11 @@ class Ticker
      *
      * @param $stepFrequence
      */
-    public function __construct($options = null)
+    public function __construct(CallbackInterface $tickCallback, CallbackInterface $hopCallback, $options = [])
     {
-        if (is_null($options)) {
-            $options = $_SERVER['argv'];
-        }
-        $options = Callback::parseCommandLineParameters($options);
+        $this->tick_callback = $tickCallback;
+        $this->hop_callback = $hopCallback;
+
         $this->setDefaultParameters($options);
         $this->setOptions($options);
     }
@@ -94,8 +101,7 @@ class Ticker
     /**
      * Sets the class properties from options
      *
-     * @param $argv
-     * @throws \Exception
+     * @param $options
      */
     protected function setOptions($options)
     {
@@ -130,15 +136,6 @@ class Ticker
         if (!isset($options['step'])) {
             $options['step'] = self::DEFAULT_STEP;
         }
-        if (!isset($options['tick_callback'])) {
-            $options['tick_callback'] = self::DEFAULT_TICK_CALLBACK;
-        }
-        $options['tick_callback'] = new Callback($options['tick_callback']);
-
-        if (!isset($options['hop_callback'])) {
-            $options['hop_callback'] = self::DEFAULT_HOP_CALLBACK;
-        }
-        $options['hop_callback'] = new Callback($options['hop_callback']);
     }
 
     /**
@@ -166,8 +163,6 @@ class Ticker
      */
     public function runHop()
     {
-        // Execution time in microseconds
-        $execTime = 0;
         $totalTime = $this->total_time;
         // we're living the TTL time only
         do {
@@ -181,14 +176,15 @@ class Ticker
             if ((microtime(1) - $startIterationTime) > $this->step) {
                 trigger_error("The call callback took too much time. The ticker could lose the right tact.");
             }
-            $execTime += $this->step;
             $totalTime -= $this->step;
             // calc in microseconds
+            // How much time left to next tick
             $restIterationTime = $this->step * 1000000 - (round(microtime(1) - $startIterationTime));
             if ($restIterationTime > 0) {
                 usleep($restIterationTime);
+            } else {
+                usleep(1000);
             }
-            usleep(1000);
         } while ($totalTime > 0);
     }
 }

@@ -27,5 +27,7 @@ return [
                 'max_log_rows' => 600,
             ],
         ],
+        'total_time' => 30,
+        'step' => 1
     ]
 ];
