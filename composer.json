@@ -11,11 +11,7 @@
     },
     "autoload": {
         "psr-4": {
-            "zaboy\\scheduler\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
+            "zaboy\\scheduler\\": "src/",
             "zaboy\\test\\scheduler\\": "test/src/"
         }
     },

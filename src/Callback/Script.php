@@ -22,14 +22,14 @@ class Script implements CallbackInterface
      *
      * {@inherit}
      */
-    public function init(array $initParams = [])
+    public function __construct(array $params = [])
     {
-        if (!isset($initParams['script_name'])) {
+        if (!isset($params['script_name'])) {
             throw new CallbackException("The necessary parameter \"script_name\" is expected");
         }
 
-        $script = $initParams['script_name'];
-        unset($initParams['script_name']);
+        $script = $params['script_name'];
+        unset($params['script_name']);
         if (is_file($script)) {
             $this->script = $script;
         } else {
@@ -46,13 +46,13 @@ class Script implements CallbackInterface
      *
      * {@inherit}
      */
-    public function call(array $dynamicParams = [])
+    public function call(array $options = [])
     {
         if (is_null($this->script)) {
             throw new CallbackException("The object was not initialized. Use the method \"init\" at first.");
         }
         $cmd = "php " . $this->script;
-        $cmd .= self::unParseParameters($dynamicParams);
+        $cmd .= self::makeParamsString($options);
         pclose(
             popen($cmd . " &", 'w')
         );
@@ -95,7 +95,7 @@ class Script implements CallbackInterface
      * @param $options
      * @return string
      */
-    public static function unParseParameters($options)
+    public static function makeParamsString($options)
     {
         $cmd = '';
         foreach ($options as $key => $value) {

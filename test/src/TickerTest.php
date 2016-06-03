@@ -16,12 +16,27 @@ class TickerTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
+        $container = include './config/container.php';
+        $dataStoreConfig = $container->get('config')['dataStore'];
+        // Create log files if they do not exist
+        if (!is_file($dataStoreConfig['hop_log_datastore']['filename'])) {
+            copy(
+                $dataStoreConfig['hop_log_datastore']['filename'] . '.dist',
+                $dataStoreConfig['hop_log_datastore']['filename']
+            );
+        }
+        if (!is_file($dataStoreConfig['tick_log_datastore']['filename'])) {
+            copy(
+                $dataStoreConfig['tick_log_datastore']['filename'] . '.dist',
+                $dataStoreConfig['tick_log_datastore']['filename']
+            );
+        }
+
         $this->runCmdPattern = "php ";
         $this->runCmdPattern .= realpath(dirname(__DIR__) . '/../www/run.php');
         $this->runCmdPattern .= " -total_time %d -step %s";
         $this->runCmdPattern .= " &";
 
-        $container = include './config/container.php';
         $this->tickLog = $container->get('tick_log_datastore');
         $this->hopLog = $container->get('hop_log_datastore');
         $this->config = $container->get('config')['ticker'];

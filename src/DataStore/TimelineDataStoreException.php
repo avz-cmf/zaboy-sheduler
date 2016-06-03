@@ -1,6 +1,6 @@
 <?php
 
-namespace zaboy\scheduler\DataStore\Exception;
+namespace zaboy\scheduler\DataStore;
 
 
 class TimelineDataStoreException extends \Exception

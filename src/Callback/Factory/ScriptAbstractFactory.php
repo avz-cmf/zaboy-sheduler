@@ -53,11 +53,7 @@ class ScriptAbstractFactory implements AbstractFactoryInterface
         $serviceConfig = $config['callback'][$requestedName];
         $requestedClassName = $serviceConfig['class'];
         $params = $serviceConfig['params'];
-        /** @var \zaboy\scheduler\Callback\Script $instance */
-        $instance = new $requestedClassName();
-        // Initialize the object right away
-        $instance->init($params);
-        return $instance;
+        return new $requestedClassName($params);
     }
 
 

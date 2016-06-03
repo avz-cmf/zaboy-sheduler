@@ -4,16 +4,13 @@ return [
     'dataStore' => [
         'tick_log_datastore' => [
             'class' => 'zaboy\rest\DataStore\CsvIntId',
-            'filename' => getcwd() . '/logs/tick.log',
+            'filename' => getcwd() . '/test/logs/tick.log',
             'delimiter' => ';',
         ],
         'hop_log_datastore' => [
             'class' => 'zaboy\rest\DataStore\CsvIntId',
-            'filename' => getcwd() . '/logs/hop.log',
+            'filename' => getcwd() . '/test/logs/hop.log',
             'delimiter' => ';',
-        ],
-        'timeline_datastore' => [
-            'class' => 'zaboy\scheduler\DataStore\Timeline',
         ],
     ],
     'ticker' => [
@@ -29,5 +26,19 @@ return [
         ],
         'total_time' => 30,
         'step' => 1
-    ]
+    ],
+    'callback' => [
+        'hop_callback' => [
+            'class' => 'zaboy\scheduler\Callback\Script',
+            'params' => [
+                'script_name' => 'scripts/hop.php',
+            ],
+        ],
+        'tick_callback' => [
+            'class' => 'zaboy\scheduler\Callback\Script',
+            'params' => [
+                'script_name' => 'scripts/tick.php',
+            ],
+        ]
+    ],
 ];

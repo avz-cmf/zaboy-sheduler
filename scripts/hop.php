@@ -9,4 +9,4 @@ $columns = [
 ];
 $scriptType = 'hop';
 
-include './scripts/common.php';
+include './scripts/ticker_common.php';

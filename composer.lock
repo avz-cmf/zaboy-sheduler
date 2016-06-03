@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "6a8dd14eda0b7c13635f6d3d291442e7",
+    "hash": "bad705484ce0a06f6f4e7184426b4a52",
     "content-hash": "8a3a97bcf08d2c9d04eab20202bc028e",
     "packages": [
         {
@@ -57,16 +57,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.18.14",
+            "version": "3.18.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "9398db378231fe723583fb8d7a919c1806f02be3"
+                "reference": "a50c0971d42867ac8184c52c5f35b27255a695b2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/9398db378231fe723583fb8d7a919c1806f02be3",
-                "reference": "9398db378231fe723583fb8d7a919c1806f02be3",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/a50c0971d42867ac8184c52c5f35b27255a695b2",
+                "reference": "a50c0971d42867ac8184c52c5f35b27255a695b2",
                 "shasum": ""
             },
             "require": {
@@ -133,7 +133,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2016-05-26 20:43:24"
+            "time": "2016-06-02 20:13:40"
         },
         {
             "name": "container-interop/container-interop",

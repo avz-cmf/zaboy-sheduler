@@ -9,4 +9,4 @@ $columns = [
 ];
 $scriptType = 'tick';
 
-include './scripts/common.php';
+include './scripts/ticker_common.php';

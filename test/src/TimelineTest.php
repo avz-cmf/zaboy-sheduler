@@ -52,7 +52,7 @@ class TimelineTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(
             $this->object->has(123.0)
         );
-        $this->setExpectedExceptionRegExp('zaboy\scheduler\DataStore\Exception\TimelineDataStoreException',
+        $this->setExpectedExceptionRegExp('zaboy\scheduler\DataStore\TimelineDataStoreException',
             "/Specified id=\"[0-9.]+\" is out of range for Unix-time/");
         $this->object->has(PHP_INT_MAX + 0.01);
     }
@@ -74,7 +74,7 @@ class TimelineTest extends \PHPUnit_Framework_TestCase
 
     public function _test_queryGetTimelineFromEmptyQuery()
     {
-        $this->setExpectedExceptionRegExp('zaboy\scheduler\DataStore\Exception\TimelineDataStoreException',
+        $this->setExpectedExceptionRegExp('zaboy\scheduler\DataStore\TimelineDataStoreException',
             "/The maximum count of items was reached/");
 
         $query = new Query();

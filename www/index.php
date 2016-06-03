@@ -8,3 +8,12 @@
 
 chdir(dirname(__DIR__));
 require './vendor/autoload.php';
+
+$container = include './config/container.php';
+
+/** @var zaboy\scheduler\Callback\Script $scriptCallback */
+$scriptCallback = $container->get('script_callback');
+$scriptCallback->init([
+    'script_name' => 'scripts/tick.php'
+]);
+$scriptCallback->call();

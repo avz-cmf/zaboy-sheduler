@@ -2,7 +2,7 @@
 
 namespace zaboy\scheduler\DataStore\Iterator;
 
-use zaboy\scheduler\DataStore\Exception\TimelineDataStoreException;
+use zaboy\scheduler\DataStore\TimelineDataStoreException;
 use zaboy\rest\DataStore\Interfaces\ReadInterface;
 use zaboy\rest\DataStore\Iterators\DataStoreIterator;
 

@@ -37,7 +37,7 @@ class TimelineIteratorTest extends \PHPUnit_Framework_TestCase
     public function test_createAnIteratorWithWrongStep0()
     {
         $now = time() * 10;
-        $this->setExpectedExceptionRegExp('zaboy\scheduler\DataStore\Exception\TimelineDataStoreException',
+        $this->setExpectedExceptionRegExp('zaboy\scheduler\DataStore\TimelineDataStoreException',
             "/Paramter \"step\" must be greater than zero/");
         $iterator = new TimelineIterator($this->iteratorCallbackName, $now, 1000, 0);
     }
@@ -74,7 +74,7 @@ class TimelineIteratorTest extends \PHPUnit_Framework_TestCase
     {
         $now = time() * 10;
         $iterator = new TimelineIterator($this->iteratorCallbackName, $now, null, 10);
-        $this->setExpectedExceptionRegExp('zaboy\scheduler\DataStore\Exception\TimelineDataStoreException',
+        $this->setExpectedExceptionRegExp('zaboy\scheduler\DataStore\TimelineDataStoreException',
             "/The maximum count of items was reached/");
         foreach ($iterator as $step) {
 

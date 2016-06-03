@@ -17,7 +17,7 @@ interface CallbackInterface
      * @param array $params - associative array where passed data for initialize object and/or those data which won't be changed in future
      * @return void
      */
-    public function init(array $params = []);
+    public function __construct(array $params = []);
 
     /**
      * Call the callback.

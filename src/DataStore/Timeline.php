@@ -2,7 +2,7 @@
 
 namespace zaboy\scheduler\DataStore;
 
-use zaboy\scheduler\DataStore\Exception\TimelineDataStoreException;
+use zaboy\scheduler\DataStore\TimelineDataStoreException;
 use zaboy\scheduler\DataStore\Iterator\TimelineIterator;
 use zaboy\scheduler\UTCTime;
 use Xiag\Rql\Parser\Node\Query\LogicOperator;
