@@ -14,18 +14,20 @@ return [
         ],
     ],
     'ticker' => [
-        'tick' => [
-            'callbackParams' => [
-                'max_log_rows' => 600,
-            ],
-        ],
-        'hop' => [
-            'callbackParams' => [
-                'max_log_rows' => 600,
-            ],
-        ],
         'total_time' => 30,
-        'step' => 1
+        'step' => 1,
+        'hop' => [
+            'callback' => 'hop_callback',
+            'callbackParams' => [
+                'max_log_rows' => 600,
+            ],
+        ],
+        'tick' => [
+            'callback' => 'tick_callback',
+            'callbackParams' => [
+                'max_log_rows' => 600,
+            ],
+        ],
     ],
     'callback' => [
         'hop_callback' => [
@@ -39,6 +41,6 @@ return [
             'params' => [
                 'script_name' => 'scripts/tick.php',
             ],
-        ]
+        ],
     ],
 ];

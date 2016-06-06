@@ -174,7 +174,7 @@ class Ticker
             ], $this->tickCallbackParams));
             // Checks runtime of callback; if greater than step - triggers notice
             if ((microtime(1) - $startIterationTime) > $this->step) {
-                trigger_error("The call callback took too much time. The ticker could lose the right tact.");
+//                trigger_error("The call callback took too much time. The ticker could lose the right tact.");
             }
             $totalTime -= $this->step;
             // calc in microseconds

@@ -48,9 +48,6 @@ class Script implements CallbackInterface
      */
     public function call(array $options = [])
     {
-        if (is_null($this->script)) {
-            throw new CallbackException("The object was not initialized. Use the method \"init\" at first.");
-        }
         $cmd = "php " . $this->script;
         $cmd .= self::makeParamsString($options);
         pclose(
