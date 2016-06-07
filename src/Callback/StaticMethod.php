@@ -24,6 +24,6 @@ class StaticMethod implements CallbackInterface
 
     public function call(array $options = [])
     {
-        return call_user_func($this->method, $options);
+        return call_user_func_array($this->method, $options);
     }
 }

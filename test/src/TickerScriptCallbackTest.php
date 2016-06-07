@@ -2,7 +2,6 @@
 
 namespace zaboy\test\scheduler;
 
-use zaboy\scheduler\Callback\Script;
 use zaboy\test\sheduler\TickerAbstractTest;
 
 class TickerScriptCallbackTest extends TickerAbstractTest
