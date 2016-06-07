@@ -12,6 +12,10 @@ return [
             'filename' => getcwd() . '/test/logs/hop.log',
             'delimiter' => ';',
         ],
+        'filters_datastore' => [
+            'class' => 'zaboy\rest\DataStore\DbTable',
+            'tableName' => 'filters'
+        ],
     ],
     'ticker' => [
         'total_time' => 30,
@@ -40,6 +44,13 @@ return [
             'class' => 'zaboy\scheduler\Callback\Script',
             'params' => [
                 'script_name' => 'scripts/tick.php',
+            ],
+        ],
+        'schedule_callback' => [
+            'class' => 'zaboy\scheduler\Callback\Instance',
+            'params' => [
+                'instanceServiceName' => 'scheduler',
+                'instanceMethodName' => 'callback',
             ],
         ],
     ],

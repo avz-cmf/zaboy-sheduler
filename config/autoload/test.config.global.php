@@ -1,6 +1,11 @@
 <?php
 
 return [
+    'dataStore' => [
+        'test_scheduler_filters_datastore' => [
+            'class' => 'zaboy\rest\DataStore\Memory',
+        ],
+    ],
     'test_ticker_script_callback' => [
         'total_time' => 30,
         'step' => 1,
@@ -35,6 +40,17 @@ return [
         ],
     ],
 
+    'test_schedule_callback' => [
+        'total_time' => 60,
+        'step' => 1,
+        'hop' => [
+            'callback' => 'scheduler_hop_callback',
+        ],
+        'tick' => [
+            'callback' => 'scheduler_tick_callback',
+        ],
+    ],
+
     'callback' => [
         'script_hop_callback' => [
             'class' => 'zaboy\scheduler\Callback\Script',
@@ -57,8 +73,22 @@ return [
         'staticmethod_tick_callback' => [
             'class' => 'zaboy\scheduler\Callback\StaticMethod',
             'params' => [
-                'method' => 'zaboy\test\scheduler\TickerStaticMethodCallbackTest::methodForTickCallback',
+                'method' => ['zaboy\test\scheduler\TickerStaticMethodCallbackTest', 'methodForTickCallback'],
             ],
-        ]
+        ],
+        'scheduler_hop_callback' => [
+            'class' => 'zaboy\scheduler\Callback\Instance',
+            'params' => [
+                'instanceServiceName' => 'test_scheduler',
+                'instanceMethodName' => 'processHop',
+            ],
+        ],
+        'scheduler_tick_callback' => [
+            'class' => 'zaboy\scheduler\Callback\Instance',
+            'params' => [
+                'instanceServiceName' => 'test_scheduler',
+                'instanceMethodName' => 'processTick',
+            ],
+        ],
     ],
 ];

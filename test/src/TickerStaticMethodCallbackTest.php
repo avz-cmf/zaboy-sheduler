@@ -45,7 +45,7 @@ class TickerStaticMethodCallbackTest extends TickerAbstractTest
         /** @var \Zend\ServiceManager\ServiceManager $container */
         $container = include './config/container.php';
         if (!$container->has(self::$logServiceName)) {
-            throw new Exception("The service \"" . self::$logServiceName . "\" must be specified in config/datastore");
+            throw new \Exception("The service \"" . self::$logServiceName . "\" must be specified in config/datastore");
         }
         $log = $container->get(self::$logServiceName);
 
@@ -53,7 +53,7 @@ class TickerStaticMethodCallbackTest extends TickerAbstractTest
         $itemData = array_flip(self::$logItemDataColumns);
         array_walk($itemData, function (&$item, $key) use ($options) {
             if (!isset($options[$key])) {
-                throw new Exception("Expected necessary parameter \"{$key}\"");
+                throw new \Exception("Expected necessary parameter \"{$key}\"");
             }
             $item = $options[$key];
         });

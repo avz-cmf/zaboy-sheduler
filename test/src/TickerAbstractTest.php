@@ -2,6 +2,7 @@
 
 namespace zaboy\test\sheduler;
 
+use zaboy\scheduler\Callback\StaticMethod;
 use zaboy\scheduler\Ticker;
 
 abstract class TickerAbstractTest extends \PHPUnit_Framework_TestCase
@@ -68,6 +69,7 @@ abstract class TickerAbstractTest extends \PHPUnit_Framework_TestCase
         $this->setTicker([
             'total_time' => 3,
             'step' => 0.1,
+            'critical_overtime' => 100,
         ]);
         $this->ticker->start();
 
@@ -97,7 +99,8 @@ abstract class TickerAbstractTest extends \PHPUnit_Framework_TestCase
             'total_time' => 3,
             'step' => 0.1,
             'tick__max_log_rows' => 30,
-            'hop__max_log_rows' => 1
+            'hop__max_log_rows' => 1,
+            'critical_overtime' => 100,
         ]);
         $this->ticker->start();
 
@@ -109,4 +112,22 @@ abstract class TickerAbstractTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+
+    public static function longCallback()
+    {
+        usleep(200000);
+    }
+
+    public function test_checkOverheadTime()
+    {
+        $hopCallback = new StaticMethod(['method' => __CLASS__ . '::longCallback']);
+        $tickCallback = new StaticMethod(['method' => __CLASS__ . '::longCallback']);
+        $options = [
+            'total_time' => 3,
+            'step' => 0.1,
+        ];
+        $ticker = new Ticker($tickCallback, $hopCallback, $options);
+        $this->setExpectedExceptionRegExp('\Exception', "/Current hop already works greater than allowed overhead time/");
+        $ticker->start();
+    }
 }

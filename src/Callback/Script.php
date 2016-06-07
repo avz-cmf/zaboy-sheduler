@@ -9,6 +9,8 @@ use zaboy\scheduler\Callback\Interfaces\CallbackInterface;
  *
  * This class implements an abstraction of callback - php-script
  * It can parse parameters from command line
+ *
+ * @see \zaboy\scheduler\Callback\Factory\ScriptAbstractFactory
  * @package zaboy\scheduler\Callback
  */
 class Script implements CallbackInterface

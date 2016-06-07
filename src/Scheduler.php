@@ -2,6 +2,8 @@
 
 namespace zaboy\scheduler;
 
+use zaboy\scheduler\Callback\CallbackAbstract;
+use zaboy\scheduler\Callback\Interfaces\CallbackInterface;
 use zaboy\scheduler\DataStore\Timeline;
 use Xiag\Rql\Parser\Query;
 use zaboy\rest\DataStore\DataStoreAbstract;
@@ -48,21 +50,36 @@ class Scheduler
         return $query;
     }
 
-    public function runTick($tickId, $step)
+    public function processHop($hopId, $ttl)
+    {
+        // do nothing at the moment
+    }
+
+
+    public function processTick($tickId, $step)
     {
         $query = new Query();
         $query->setQuery(
             new ScalarOperator\EqNode('active', 1)
         );
         $filters = $this->filterDs->query($query);
-
         foreach ($filters as $filter) {
             $rqlQueryObject = $this->parseRql($filter['rql']);
             $rqlQueryObject = $this->addTickLimit($rqlQueryObject, $tickId, $step);
             $matches = $this->timelineDs->query($rqlQueryObject);
             if (count($matches)) {
-                // call callback
+                /** @var CallbackInterface $instance */
+                $instance = CallbackAbstract::factory($filter['callback']);
+                $instance->call(['tick_id' => $tickId, 'step' => $step]);
             }
         }
     }
+
+    protected function getLogger()
+    {
+        $container = include './config/container.php';
+        $log = $container->get('hop_log_datastore');
+        return $log;
+    }
+
 }

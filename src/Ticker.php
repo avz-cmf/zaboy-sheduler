@@ -27,6 +27,11 @@ class Ticker
     const HOP_PARAMS_PREFIX = 'hop__';
 
     /**
+     * Time overhead which will lead to exception. The hop souldn't to work greater over this time  (in percents)
+     */
+    const DEFAULT_CRITIAL_OVERTIME = 10;
+
+    /**
      * Tick frequency in seconds
      *
      * Minimum tested stable value is 0.1 sec
@@ -40,6 +45,34 @@ class Ticker
      * @var int
      */
     protected $total_time;
+
+    /**
+     * Time overhead which will lead to exception. The hop souldn't to work greater over this time  (in percents)
+     *
+     * @var int
+     */
+    protected $critical_overtime;
+
+    /**
+     * How many steps left
+     *
+     * @var float
+     */
+    protected $leftSteps;
+
+    /**
+     * Tick Id is current timestamp with or without tenth parts of seconds
+     *
+     * @var float|int
+     */
+    protected $tickId;
+
+    /**
+     * Current hop had started at this time
+     *
+     * @var float|int
+     */
+    protected $hopStart;
 
     /**
      * Callback which called every tick
@@ -81,21 +114,7 @@ class Ticker
 
         $this->setDefaultParameters($options);
         $this->setOptions($options);
-    }
-
-    /**
-     * Returns id of hop/tick
-     *
-     * @return float|int
-     */
-    public function getTickId()
-    {
-        if ($this->step < 1) {
-            $id = round(microtime(1), 1);
-        } else {
-            $id = time();
-        }
-        return $id;
+        $this->leftSteps = floor($this->total_time / $this->step);
     }
 
     /**
@@ -136,6 +155,12 @@ class Ticker
         if (!isset($options['step'])) {
             $options['step'] = self::DEFAULT_STEP;
         }
+        if ($options['step'] <= 0) {
+            throw new \Exception("The parameter \"step\" must be greater tan zero. \"{$options['step']}\" given.");
+        }
+        if (!isset($options['critical_overtime'])) {
+            $options['critical_overtime'] = self::DEFAULT_CRITIAL_OVERTIME;
+        }
     }
 
     /**
@@ -143,8 +168,9 @@ class Ticker
      */
     public function preRunHopCallback()
     {
+        $this->hopStart = UTCTime::getUTCTimestamp($this->step > 1);
         $this->hop_callback->call(array_merge([
-            'hop_start' => $this->getTickId(),
+            'hop_start' => $this->hopStart,
             'ttl' => $this->total_time,
         ], $this->hopCallbackParams));
     }
@@ -163,20 +189,24 @@ class Ticker
      */
     public function runHop()
     {
-        $totalTime = $this->total_time;
+        $this->tickId = UTCTime::getUTCTimestamp($this->step < 1);
         // we're living the TTL time only
         do {
             $startIterationTime = microtime(1);
             // calling tick callback
             $this->tick_callback->call(array_merge([
-                'tick_id' => $this->getTickId(),
+                'tick_id' => $this->tickId,
                 'step' => $this->step,
             ], $this->tickCallbackParams));
             // Checks runtime of callback; if greater than step - triggers notice
             if ((microtime(1) - $startIterationTime) > $this->step) {
 //                trigger_error("The call callback took too much time. The ticker could lose the right tact.");
             }
-            $totalTime -= $this->step;
+            $this->leftSteps--;
+            $this->tickId += $this->step;
+
+            $this->checkOverheadTime();
+
             // calc in microseconds
             // How much time left to next tick
             $restIterationTime = $this->step * 1000000 - (round(microtime(1) - $startIterationTime));
@@ -185,6 +215,21 @@ class Ticker
             } else {
                 usleep(1000);
             }
-        } while ($totalTime > 0);
+        } while ($this->leftSteps > 0);
+    }
+
+    /**
+     * Checks if this hop works greater than "total_time + (total_time * overhead_time) / 100"
+     *
+     * @throws \Exception
+     */
+    protected function checkOverheadTime()
+    {
+        $now = UTCTime::getUTCTimestamp($this->step < 1);
+        $passedTime = $now - $this->hopStart;
+        $totalAllowedTime = $this->total_time * $this-> critical_overtime / 100 + $this->total_time;
+        if ($passedTime >= $totalAllowedTime) {
+            throw new \Exception("Current hop already works greater than allowed overhead time.");
+        }
     }
 }
