@@ -1,8 +1,8 @@
 <?php
 
-namespace zaboy\test\scheduler;
+namespace zaboy\test\scheduler\Ticker;
 
-use zaboy\test\sheduler\TickerAbstractTest;
+use zaboy\test\sheduler\Ticker\TickerAbstractTest;
 use \Xiag\Rql\Parser\Node\LimitNode;
 use \Xiag\Rql\Parser\Node\SortNode;
 use \Xiag\Rql\Parser\Node\SelectNode;

@@ -1,8 +1,8 @@
 <?php
 
-namespace zaboy\test\scheduler\Factory;
+namespace zaboy\test\scheduler\Ticker\Factory;
 
-use zaboy\scheduler\Factory\TickerFactory;
+use zaboy\scheduler\Ticker\Factory\TickerFactory;
 
 class TickerStaticMethodFactory extends TickerFactory
 {

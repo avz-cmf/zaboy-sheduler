@@ -1,8 +1,8 @@
 <?php
 
-namespace zaboy\test\scheduler\Factory;
+namespace zaboy\test\scheduler\Scheduler\Factory;
 
-use zaboy\scheduler\Scheduler;
+use zaboy\scheduler\Scheduler\Scheduler;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 

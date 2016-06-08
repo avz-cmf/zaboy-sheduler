@@ -1,8 +1,9 @@
 <?php
 
-namespace zaboy\scheduler;
+namespace zaboy\scheduler\Ticker;
 
 use zaboy\scheduler\Callback\Interfaces\CallbackInterface;
+use zaboy\scheduler\DataStore\UTCTime;
 
 class Ticker
 {
@@ -29,7 +30,7 @@ class Ticker
     /**
      * Time overhead which will lead to exception. The hop souldn't to work greater over this time  (in percents)
      */
-    const DEFAULT_CRITIAL_OVERTIME = 10;
+    const DEFAULT_CRITIAL_OVERTIME = 100;
 
     /**
      * Tick frequency in seconds
@@ -77,14 +78,14 @@ class Ticker
     /**
      * Callback which called every tick
      *
-     * @var \zaboy\scheduler\Callback\Interfaces
+     * @var \zaboy\scheduler\Callback\Interfaces\CallbackInterface
      */
     protected $tick_callback;
 
     /**
      * Callback which called in the start
      *
-     * @var \zaboy\scheduler\Callback\Interfaces
+     * @var \zaboy\scheduler\Callback\Interfaces\CallbackInterface
      */
     protected $hop_callback;
 

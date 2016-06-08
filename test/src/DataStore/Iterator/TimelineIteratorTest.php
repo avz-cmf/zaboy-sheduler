@@ -1,12 +1,12 @@
 <?php
 
-namespace zaboy\test\scheduler\Iterator;
+namespace zaboy\test\scheduler\DataStore\Iterator;
 
 use zaboy\scheduler\DataStore\Iterator\TimelineIterator;
 
 class TimelineIteratorTest extends \PHPUnit_Framework_TestCase
 {
-    protected $iteratorCallbackName = 'zaboy\test\scheduler\Iterator\TimelineIteratorTest::iteratorCallback';
+    protected $iteratorCallbackName = 'zaboy\test\scheduler\DataStore\Iterator\TimelineIteratorTest::iteratorCallback';
 
     public static function iteratorCallback($id)
     {

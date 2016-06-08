@@ -1,8 +1,8 @@
 <?php
 
-namespace zaboy\test\scheduler;
+namespace zaboy\test\scheduler\Ticker;
 
-use zaboy\test\sheduler\TickerAbstractTest;
+use zaboy\test\sheduler\Ticker\TickerAbstractTest;
 
 class TickerScriptCallbackTest extends TickerAbstractTest
 {

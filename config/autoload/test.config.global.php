@@ -67,13 +67,13 @@ return [
         'staticmethod_hop_callback' => [
             'class' => 'zaboy\scheduler\Callback\StaticMethod',
             'params' => [
-                'method' => 'zaboy\test\scheduler\TickerStaticMethodCallbackTest::methodForHopCallback',
+                'method' => 'zaboy\test\scheduler\Ticker\TickerStaticMethodCallbackTest::methodForHopCallback',
             ],
         ],
         'staticmethod_tick_callback' => [
             'class' => 'zaboy\scheduler\Callback\StaticMethod',
             'params' => [
-                'method' => ['zaboy\test\scheduler\TickerStaticMethodCallbackTest', 'methodForTickCallback'],
+                'method' => ['zaboy\test\scheduler\Ticker\TickerStaticMethodCallbackTest', 'methodForTickCallback'],
             ],
         ],
         'scheduler_hop_callback' => [

@@ -1,11 +1,10 @@
 <?php
 
-namespace zaboy\scheduler\Factory;
+namespace zaboy\scheduler\Ticker\Factory;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use zaboy\scheduler\Ticker;
-use zaboy\scheduler\Callback\Script;
+use zaboy\scheduler\Ticker\Ticker;
 
 class TickerFactory implements FactoryInterface
 {

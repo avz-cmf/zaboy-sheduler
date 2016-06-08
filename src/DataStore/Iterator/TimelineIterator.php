@@ -3,8 +3,6 @@
 namespace zaboy\scheduler\DataStore\Iterator;
 
 use zaboy\scheduler\DataStore\TimelineDataStoreException;
-use zaboy\rest\DataStore\Interfaces\ReadInterface;
-use zaboy\rest\DataStore\Iterators\DataStoreIterator;
 
 class TimelineIterator implements \Iterator
 {

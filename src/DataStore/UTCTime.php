@@ -1,6 +1,6 @@
 <?php
 
-namespace zaboy\scheduler;
+namespace zaboy\scheduler\DataStore;
 
 
 class UTCTime

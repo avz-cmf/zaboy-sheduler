@@ -1,11 +1,8 @@
 <?php
 
-namespace zaboy\test\scheduler;
+namespace zaboy\test\scheduler\DataStore;
 
-
-use zaboy\scheduler\DataStore\Timeline;
-use zaboy\scheduler\UTCTime;
-use Xiag\Rql\Parser\Node\LimitNode;
+use zaboy\scheduler\DataStore\UTCTime;
 use Xiag\Rql\Parser\Query;
 use Xiag\Rql\Parser\Node\Query\LogicOperator;
 use Xiag\Rql\Parser\Node\Query\ScalarOperator;

@@ -1,9 +1,8 @@
 <?php
 
-namespace zaboy\test\scheduler;
+namespace zaboy\test\scheduler\Scheduler;
 
-use zaboy\scheduler\Ticker;
-use zaboy\scheduler\UTCTime;
+use zaboy\scheduler\Ticker\Ticker;
 
 class SchedulerTest extends \PHPUnit_Framework_TestCase
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace zaboy\scheduler;
+namespace zaboy\scheduler\Scheduler;
 
 use zaboy\scheduler\Callback\CallbackAbstract;
 use zaboy\scheduler\Callback\Interfaces\CallbackInterface;

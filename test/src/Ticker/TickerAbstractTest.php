@@ -1,9 +1,9 @@
 <?php
 
-namespace zaboy\test\sheduler;
+namespace zaboy\test\sheduler\Ticker;
 
 use zaboy\scheduler\Callback\StaticMethod;
-use zaboy\scheduler\Ticker;
+use zaboy\scheduler\Ticker\Ticker;
 
 abstract class TickerAbstractTest extends \PHPUnit_Framework_TestCase
 {
@@ -18,7 +18,7 @@ abstract class TickerAbstractTest extends \PHPUnit_Framework_TestCase
 
     protected $tickerServiceName;
 
-    /** @var  \zaboy\scheduler\Ticker */
+    /** @var  \zaboy\scheduler\Ticker\Ticker */
     protected $ticker;
 
     protected function setTicker($options = [])
