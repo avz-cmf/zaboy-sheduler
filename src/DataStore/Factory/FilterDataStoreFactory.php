@@ -4,7 +4,7 @@ namespace zaboy\scheduler\DataStore\Factory;
 
 use zaboy\rest\DataStore\DataStoreException;
 use zaboy\rest\DataStore\DbTable;
-use zaboy\scheduler\AbstractFactory;
+use zaboy\scheduler\FactoryAbstract;
 use Zend\Db\Metadata;
 use Zend\Db\Sql\Ddl\CreateTable;
 use Zend\Db\TableGateway\TableGateway;
@@ -48,7 +48,7 @@ use Zend\Db\Sql\Sql;
  * Class ScriptAbstractFactory
  * @package zaboy\scheduler\Callback\Factory
  */
-class FilterDataStoreFactory extends AbstractFactory
+class FilterDataStoreFactory extends FactoryAbstract
 {
     const TABLE_NAME = 'filters';
 

@@ -2,7 +2,7 @@
 
 namespace zaboy\scheduler\Scheduler\Factory;
 
-use zaboy\scheduler\AbstractFactory;
+use zaboy\scheduler\FactoryAbstract;
 use zaboy\scheduler\Scheduler\Scheduler;
 use zaboy\scheduler\Scheduler\SchedulerException;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -23,7 +23,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * Class ScriptAbstractFactory
  * @package zaboy\scheduler\Callback\Factory
  */
-class SchedulerFactory extends AbstractFactory
+class SchedulerFactory extends FactoryAbstract
 {
     /**
      * {@inherit}

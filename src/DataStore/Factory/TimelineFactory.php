@@ -2,11 +2,11 @@
 
 namespace zaboy\scheduler\DataStore\Factory;
 
-use zaboy\scheduler\AbstractFactory;
+use zaboy\scheduler\FactoryAbstract;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use zaboy\scheduler\DataStore\Timeline;
 
-class TimelineFactory extends AbstractFactory
+class TimelineFactory extends FactoryAbstract
 {
     /**
      * {@inherit}

@@ -5,7 +5,7 @@ namespace zaboy\scheduler;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-abstract class AbstractFactory implements FactoryInterface
+abstract class FactoryAbstract implements FactoryInterface
 {
     /**
      * Alias for "createService"

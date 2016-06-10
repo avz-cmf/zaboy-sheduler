@@ -51,10 +51,19 @@ class Script implements CallbackInterface
     public function call(array $options = [])
     {
         $cmd = "php " . $this->script;
-        $cmd .= self::makeParamsString($options);
+//        $cmd .= self::makeParamsString($options);
+        $cmd .= self::makeParamsString(['scriptOptions' => self::encodeParams($options)]);
         pclose(
             popen($cmd . " &", 'w')
         );
+    }
+
+
+    public static function getCallOptions($argv)
+    {
+        $options = Script::parseCommandLineParameters($argv);
+        $options = Script::decodeParams($options['scriptOptions']);
+        return $options;
     }
 
     /**
@@ -87,6 +96,17 @@ class Script implements CallbackInterface
         }
         return $options;
     }
+
+    public static function encodeParams($options)
+    {
+        return base64_encode(serialize($options));
+    }
+
+    public static function decodeParams($base64String)
+    {
+        return unserialize(base64_decode($base64String));
+    }
+
 
     /**
      * Join all parameters from $options to string for passing them via command line

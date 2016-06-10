@@ -109,7 +109,7 @@ class TimelineTest extends \PHPUnit_Framework_TestCase
     public function test_getRowsByIds()
     {
         $id = UTCTime::getUTCTimestamp();
-        $to = UTCTime::getUTCTimestamp(0) + 1;
+        $to = $id + 1;
 
         $rql = "and(or(eq(id,{$id}),eq(id," . ($id + 0.5) . ")),le(timestamp,{$to}))";
         $rqlQueryObject = $this->rqlParser->rqlDecoder($rql);

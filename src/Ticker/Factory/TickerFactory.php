@@ -2,7 +2,7 @@
 
 namespace zaboy\scheduler\Ticker\Factory;
 
-use zaboy\scheduler\AbstractFactory;
+use zaboy\scheduler\FactoryAbstract;
 use zaboy\scheduler\Callback\CallbackException;
 use zaboy\scheduler\Callback\CallbackManager;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -28,7 +28,7 @@ use zaboy\scheduler\Ticker\Ticker;
  * Class ScriptAbstractFactory
  * @package zaboy\scheduler\Callback\Factory
  */
-class TickerFactory extends AbstractFactory
+class TickerFactory extends FactoryAbstract
 {
     const TICKER_SERVICE_NAME = 'ticker';
 

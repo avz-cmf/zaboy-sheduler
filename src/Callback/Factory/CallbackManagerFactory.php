@@ -2,11 +2,11 @@
 
 namespace zaboy\scheduler\Callback\Factory;
 
-use zaboy\scheduler\AbstractFactory;
+use zaboy\scheduler\FactoryAbstract;
 use zaboy\scheduler\Callback\CallbackManager;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class CallbackManagerFactory extends AbstractFactory
+class CallbackManagerFactory extends FactoryAbstract
 {
     /**
      * {@inherit}
