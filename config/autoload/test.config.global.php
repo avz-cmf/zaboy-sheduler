@@ -90,6 +90,12 @@ return [
                 'instanceMethodName' => 'processTick',
             ],
         ],
+        'script_example_tick_callback' => [
+            'class' => 'zaboy\scheduler\Callback\Script',
+            'params' => [
+                'script_name' => 'src/Callback/Examples/tick.php',
+            ],
+        ],
     ],
 
 
