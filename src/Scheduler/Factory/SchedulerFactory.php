@@ -33,19 +33,19 @@ class SchedulerFactory extends AbstractFactory
     public function __invoke(ServiceLocatorInterface $serviceLocator)
     {
         if (!$serviceLocator->has('filters_datastore')) {
-            throw new SchedulerException("Can't create datastore of filters because it does not described in config.");
+            throw new SchedulerException("Can't create datastore of filters because it's not described in config.");
         }
         /** @var \zaboy\rest\DataStore\DataStoreAbstract $filterDs */
         $filterDs = $serviceLocator->get('filters_datastore');
 
         if (!$serviceLocator->has('timeline_datastore')) {
-            throw new SchedulerException("Can't create datastore of timeline because it does not described in config.");
+            throw new SchedulerException("Can't create datastore of timeline because it's not described in config.");
         }
         /** @var  \zaboy\scheduler\DataStore\Timeline $timelineDs */
         $timelineDs = $serviceLocator->get('timeline_datastore');
 
         if (!$serviceLocator->has('callback_manager')) {
-            throw new SchedulerException("Can't create callback manager because it does not described in config.");
+            throw new SchedulerException("Can't create callback manager because it's not described in config.");
         }
         /** @var \zaboy\scheduler\Callback\CallbackManager $callbackManager */
         $callbackManager = $serviceLocator->get('callback_manager');
