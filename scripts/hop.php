@@ -7,6 +7,6 @@ $columns = [
     'hop_start',
     'ttl',
 ];
-$logType = 'hop';
+$scriptType = 'hop';
 
-include './scripts/common.php';
+include './scripts/ticker_common.php';

@@ -7,6 +7,6 @@ $columns = [
     'tick_id',
     'step',
 ];
-$logType = 'tick';
+$scriptType = 'tick';
 
-include './scripts/common.php';
+include './scripts/ticker_common.php';

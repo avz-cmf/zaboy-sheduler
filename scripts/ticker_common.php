@@ -3,12 +3,12 @@
 chdir(dirname(__DIR__));
 require './vendor/autoload.php';
 
-use zaboy\sheduler\Callback\Callback;
+use \zaboy\scheduler\Callback\Script;
 use \Xiag\Rql\Parser\Node\LimitNode;
 use \Xiag\Rql\Parser\Node\SortNode;
 use \Xiag\Rql\Parser\Node\SelectNode;
 
-$options = Callback::parseCommandLineParameters($_SERVER['argv']);
+$options = Script::getCallOptions($_SERVER['argv']);
 
 /** @var Zend\ServiceManager\ServiceManager $container */
 $container = include './config/container.php';
@@ -21,15 +21,19 @@ $log = $container->get($serviceName);
 $itemData = array_flip($columns);
 array_walk($itemData, function (&$item, $key) use ($options) {
     if (!isset($options[$key])) {
-        throw new Exception("Expected necessary paramter \"{$key}\"");
+        throw new Exception("Expected necessary parameter \"{$key}\"");
     }
     $item = $options[$key];
 });
 $log->create($itemData);
 
 // Clears old records in the log
-$config = $container->get('config')['ticker']['log'][$logType];
-$maxLogRows = $config['max_log_rows'];
+if (isset($options['max_log_rows'])) {
+    $maxLogRows = $options['max_log_rows'];
+} else {
+    $config = $container->get('config')['ticker'][$scriptType]['callbackParams'];
+    $maxLogRows = $config['max_log_rows'];
+}
 
 $query = new \Xiag\Rql\Parser\Query();
 $query->setSelect(new SelectNode(['id']));
