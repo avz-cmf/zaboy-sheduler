@@ -8,7 +8,7 @@ use \Xiag\Rql\Parser\Node\LimitNode;
 use \Xiag\Rql\Parser\Node\SortNode;
 use \Xiag\Rql\Parser\Node\SelectNode;
 
-$options = Script::parseCommandLineParameters($_SERVER['argv']);
+$options = Script::getCallOptions($_SERVER['argv']);
 
 /** @var Zend\ServiceManager\ServiceManager $container */
 $container = include './config/container.php';

@@ -2,8 +2,8 @@
 
 namespace zaboy\scheduler\DataStore\Factory;
 
+use Interop\Container\ContainerInterface;
 use zaboy\scheduler\FactoryAbstract;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use zaboy\scheduler\DataStore\Timeline;
 
 class TimelineFactory extends FactoryAbstract
@@ -13,7 +13,7 @@ class TimelineFactory extends FactoryAbstract
      *
      * {@inherit}
      */
-    public function __invoke(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container)
     {
         return new Timeline();
     }

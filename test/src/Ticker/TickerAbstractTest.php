@@ -60,7 +60,9 @@ abstract class TickerAbstractTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-
+    /**
+     * This test may not work in virtual environment like windows web-server (denwer, openserver etc) or vbox virtual machines
+     */
     public function test_tickerInTenthsPartOfSeconds()
     {
         $this->tickLog->deleteAll();
@@ -92,6 +94,9 @@ abstract class TickerAbstractTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, $this->hopLog->count());
     }
 
+    /**
+     * This test may not work in virtual environment like windows web-server (denwer, openserver etc) or vbox virtual machines
+     */
     public function test_clearLog()
     {
         // Add limits for log files

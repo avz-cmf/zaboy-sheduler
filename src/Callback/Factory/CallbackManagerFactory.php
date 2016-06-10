@@ -2,9 +2,9 @@
 
 namespace zaboy\scheduler\Callback\Factory;
 
+use Interop\Container\ContainerInterface;
 use zaboy\scheduler\FactoryAbstract;
 use zaboy\scheduler\Callback\CallbackManager;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 class CallbackManagerFactory extends FactoryAbstract
 {
@@ -13,8 +13,8 @@ class CallbackManagerFactory extends FactoryAbstract
      *
      * {@inherit}
      */
-    public function __invoke(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container)
     {
-        return new CallbackManager($serviceLocator);
+        return new CallbackManager($container);
     }
 }

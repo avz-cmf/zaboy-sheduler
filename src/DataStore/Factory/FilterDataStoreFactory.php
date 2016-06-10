@@ -2,13 +2,13 @@
 
 namespace zaboy\scheduler\DataStore\Factory;
 
+use Interop\Container\ContainerInterface;
 use zaboy\rest\DataStore\DataStoreException;
 use zaboy\rest\DataStore\DbTable;
 use zaboy\scheduler\FactoryAbstract;
 use Zend\Db\Metadata;
 use Zend\Db\Sql\Ddl\CreateTable;
 use Zend\Db\TableGateway\TableGateway;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Db\Sql\Ddl\Column;
 use Zend\Db\Sql\Ddl\Constraint;
 use Zend\Db\Sql\Sql;
@@ -63,9 +63,9 @@ class FilterDataStoreFactory extends FactoryAbstract
      *
      * {@inherit}
      */
-    public function __invoke(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container)
     {
-        $this->db = $serviceLocator->has('db') ? $serviceLocator->get('db') : null;
+        $this->db = $container->has('db') ? $container->get('db') : null;
         if (is_null($this->db)) {
             throw new DataStoreException(
                 'Can\'t create Zend\Db\TableGateway\TableGateway for ' . self::TABLE_NAME
@@ -74,14 +74,14 @@ class FilterDataStoreFactory extends FactoryAbstract
 
         $hasTable = $this->hasTable();
         if (!$hasTable) {
-            $this->createTable($serviceLocator);
+            $this->createTable($container);
         }
 
         $tableGateway = new TableGateway(self::TABLE_NAME, $this->db);
         $this->dataStore = new DbTable($tableGateway);
         // Fill table using DbTable DataStore interface
         if (!$hasTable) {
-            $this->fillTable($serviceLocator);
+            $this->fillTable($container);
         }
         return $this->dataStore;
     }
@@ -104,9 +104,9 @@ class FilterDataStoreFactory extends FactoryAbstract
     /**
      * Creates the table
      *
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param ContainerInterface $serviceLocator
      */
-    protected function createTable(ServiceLocatorInterface $serviceLocator)
+    protected function createTable(ContainerInterface $container)
     {
         $table = new CreateTable(self::TABLE_NAME);
 
@@ -128,12 +128,12 @@ class FilterDataStoreFactory extends FactoryAbstract
     /**
      * Fills table by data from config
      *
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param ContainerInterface $serviceLocator
      * @throws DataStoreException
      */
-    protected function fillTable(ServiceLocatorInterface $serviceLocator)
+    protected function fillTable(ContainerInterface $container)
     {
-        $config = $serviceLocator->get('config');
+        $config = $container->get('config');
         // If configs for tasks doesn't exist do nothing
         if (!isset($config['tasks'])) {
             return;

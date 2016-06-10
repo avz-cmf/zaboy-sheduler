@@ -8,6 +8,8 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 class CallbackManager implements ServiceLocatorInterface
 {
+    const SERVICE_NAME = 'callback_manager';
+
     /** @var  \Zend\ServiceManager\ServiceManager $serviceManager */
     protected $serviceManager;
 

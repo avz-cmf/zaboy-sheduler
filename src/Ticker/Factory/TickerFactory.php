@@ -2,10 +2,10 @@
 
 namespace zaboy\scheduler\Ticker\Factory;
 
+use Interop\Container\ContainerInterface;
 use zaboy\scheduler\FactoryAbstract;
 use zaboy\scheduler\Callback\CallbackException;
 use zaboy\scheduler\Callback\CallbackManager;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use zaboy\scheduler\Ticker\Ticker;
 
 /**
@@ -37,11 +37,11 @@ class TickerFactory extends FactoryAbstract
      *
      * {@inherit}
      */
-    public function __invoke(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container)
     {
-        $config = $serviceLocator->get('config')[self::TICKER_SERVICE_NAME];
+        $config = $container->get('config')[self::TICKER_SERVICE_NAME];
 
-        $cm = new CallbackManager($serviceLocator);
+        $cm = new CallbackManager($container);
         $cm->get('');
 
         if (!isset($config['hop']['callback'])) {
@@ -51,9 +51,9 @@ class TickerFactory extends FactoryAbstract
             throw new CallbackException("The necessary parameter \"tick/callback\" does not exist.");
         }
         /** @var \zaboy\scheduler\Callback\Interfaces\CallbackInterface $hopCallback */
-        $hopCallback = $serviceLocator->get($config['hop']['callback']);
+        $hopCallback = $container->get($config['hop']['callback']);
         /** @var \zaboy\scheduler\Callback\Interfaces\CallbackInterface $tickCallback */
-        $tickCallback = $serviceLocator->get($config['tick']['callback']);
+        $tickCallback = $container->get($config['tick']['callback']);
 
         $ticker = new Ticker($tickCallback, $hopCallback, $config);
         return $ticker;

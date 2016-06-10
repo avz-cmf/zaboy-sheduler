@@ -4,6 +4,7 @@ namespace zaboy\scheduler;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 
 abstract class FactoryAbstract implements FactoryInterface
 {
@@ -13,7 +14,7 @@ abstract class FactoryAbstract implements FactoryInterface
      * @param ServiceLocatorInterface $serviceLocator
      * @return mixed
      */
-    abstract public function __invoke(ServiceLocatorInterface $serviceLocator);
+    abstract public function __invoke(ContainerInterface $container);
 
     /**
      * {@inherit}

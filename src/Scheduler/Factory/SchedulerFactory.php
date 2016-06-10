@@ -2,10 +2,11 @@
 
 namespace zaboy\scheduler\Scheduler\Factory;
 
+use Interop\Container\ContainerInterface;
+use zaboy\scheduler\Callback\CallbackManager;
 use zaboy\scheduler\FactoryAbstract;
 use zaboy\scheduler\Scheduler\Scheduler;
 use zaboy\scheduler\Scheduler\SchedulerException;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Creates if can and returns an instance of class 'Scheduler'
@@ -16,7 +17,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  *     // ...
  *     'timeline_datastore' => 'zaboy\scheduler\DataStore\Factory\TimelineFactory',
  *     'filters_datastore' => 'zaboy\scheduler\DataStore\Factory\FilterDataStoreFactory',
- *     'callback_manager' => 'zaboy\scheduler\Callback\Factory\CallbackManagerFactory',
+ *     'callback_manager' => 'zaboy\scheduler\Callback\Factory\CallbackManagerFactory',     // may absents; will create from default class
  * ]
  * </code>
  *
@@ -30,25 +31,27 @@ class SchedulerFactory extends FactoryAbstract
      *
      * {@inherit}
      */
-    public function __invoke(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container)
     {
-        if (!$serviceLocator->has('filters_datastore')) {
+        if (!$container->has('filters_datastore')) {
             throw new SchedulerException("Can't create datastore of filters because it's not described in config.");
         }
         /** @var \zaboy\rest\DataStore\DataStoreAbstract $filterDs */
-        $filterDs = $serviceLocator->get('filters_datastore');
+        $filterDs = $container->get('filters_datastore');
 
-        if (!$serviceLocator->has('timeline_datastore')) {
+        if (!$container->has('timeline_datastore')) {
             throw new SchedulerException("Can't create datastore of timeline because it's not described in config.");
         }
         /** @var  \zaboy\scheduler\DataStore\Timeline $timelineDs */
-        $timelineDs = $serviceLocator->get('timeline_datastore');
+        $timelineDs = $container->get('timeline_datastore');
 
-        if (!$serviceLocator->has('callback_manager')) {
-            throw new SchedulerException("Can't create callback manager because it's not described in config.");
+        if ($container->has(CallbackManager::SERVICE_NAME)) {
+            /** @var \zaboy\scheduler\Callback\CallbackManager $callbackManager */
+            $callbackManager = $container->get(CallbackManager::SERVICE_NAME);
+        } else {
+            $callbackManager = new CallbackManager($container);
         }
-        /** @var \zaboy\scheduler\Callback\CallbackManager $callbackManager */
-        $callbackManager = $serviceLocator->get('callback_manager');
+
         $instance = new Scheduler($filterDs, $timelineDs, $callbackManager);
         return $instance;
     }
