@@ -25,7 +25,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class InstanceAbstractFactory extends AbstractFactoryAbstract
 {
-    protected $classIsA = 'zaboy\scheduler\Callback\Instance';
+    const CLASS_IS_A = 'zaboy\scheduler\Callback\Instance';
 
     public function createServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
     {

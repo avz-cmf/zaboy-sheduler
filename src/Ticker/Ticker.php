@@ -193,26 +193,25 @@ class Ticker
         $this->tickId = UTCTime::getUTCTimestamp($this->step < 1);
         // we're living the TTL time only
         do {
-            $startIterationTime = microtime(1);
+            $startIterationTime = UTCTime::getUTCTimestamp();
             // calling tick callback
             $this->tick_callback->call(array_merge([
                 'tick_id' => $this->tickId,
                 'step' => $this->step,
             ], $this->tickCallbackParams));
             // Checks runtime of callback; if greater than step - triggers notice
-            if ((microtime(1) - $startIterationTime) > $this->step) {
+            if ((UTCTime::getUTCTimestamp() - $startIterationTime) > $this->step) {
 //                trigger_error("The call callback took too much time. The ticker could lose the right tact.");
             }
             $this->leftSteps--;
             $this->tickId += $this->step;
 
             $this->checkOverheadTime();
-
             // calc in microseconds
             // How much time left to next tick
-            $restIterationTime = $this->step * 1000000 - (round(microtime(1) - $startIterationTime));
+            $restIterationTime = $this->tickId - UTCTime::getUTCTimestamp();
             if ($restIterationTime > 0) {
-                usleep($restIterationTime);
+                usleep($restIterationTime * 1000000);
             } else {
                 usleep(1000);
             }

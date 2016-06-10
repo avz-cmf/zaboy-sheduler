@@ -24,5 +24,5 @@ namespace zaboy\scheduler\Callback\Factory;
  */
 class StaticMethodAbstarctFactory extends AbstractFactoryAbstract
 {
-    protected $classIsA = 'zaboy\scheduler\Callback\StaticMethod';
+    const CLASS_IS_A = 'zaboy\scheduler\Callback\StaticMethod';
 }

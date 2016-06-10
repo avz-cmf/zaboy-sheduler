@@ -15,7 +15,8 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 abstract class AbstractFactoryAbstract implements AbstractFactoryInterface
 {
-    protected $classIsA;
+    const CLASS_IS_A = '';
+
     /**
      * {@inherit}
      *
@@ -28,7 +29,7 @@ abstract class AbstractFactoryAbstract implements AbstractFactoryInterface
             return false;
         }
         $requestedClassName = $config[$requestedName]['class'];
-        return is_a($requestedClassName, $this->classIsA, true);
+        return is_a($requestedClassName, static::CLASS_IS_A, true);
     }
 
     /**

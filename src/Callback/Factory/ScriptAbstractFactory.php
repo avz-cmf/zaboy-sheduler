@@ -22,5 +22,5 @@ namespace zaboy\scheduler\Callback\Factory;
  */
 class ScriptAbstractFactory extends AbstractFactoryAbstract
 {
-    protected $classIsA = 'zaboy\scheduler\Callback\Script';
+    const CLASS_IS_A = 'zaboy\scheduler\Callback\Script';
 }

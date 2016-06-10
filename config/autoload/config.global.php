@@ -12,10 +12,6 @@ return [
             'filename' => getcwd() . '/test/logs/hop.log',
             'delimiter' => ';',
         ],
-        'filters_datastore' => [
-            'class' => 'zaboy\rest\DataStore\DbTable',
-            'tableName' => 'filters'
-        ],
     ],
     'ticker' => [
         'total_time' => 30,

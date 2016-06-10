@@ -2,6 +2,7 @@
 
 namespace zaboy\test\scheduler\DataStore;
 
+use zaboy\rest\RqlParser\RqlParser;
 use zaboy\scheduler\DataStore\UTCTime;
 use Xiag\Rql\Parser\Query;
 use Xiag\Rql\Parser\Node\Query\LogicOperator;
@@ -19,20 +20,14 @@ class TimelineTest extends \PHPUnit_Framework_TestCase
     /** @var  \zaboy\scheduler\DataStore\Timeline */
     protected $object;
 
+    /** @var  \zaboy\rest\RqlParser\RqlParser */
+    protected $rqlParser;
+
     protected function setUp()
     {
         $this->container = include './config/container.php';
         $this->object = $this->container->get('timeline_datastore');
-    }
-
-    protected function parseRql($rql)
-    {
-        $lexer = new Lexer();
-        $parser = Parser::createDefault();
-        $tokens = $lexer->tokenize($rql);
-        /* @var $rqlQueryObject \Xiag\Rql\Parser\Query */
-        $rqlQueryObject = $parser->parse($tokens);
-        return $rqlQueryObject;
+        $this->rqlParser = new RqlParser();
     }
 
     public function test_hasValue()
@@ -83,7 +78,7 @@ class TimelineTest extends \PHPUnit_Framework_TestCase
         $from = UTCTime::getUTCTimestamp(0);
         $to = $from + 60;
         $rql = "and(ge(timestamp,{$from}),le(timestamp,{$to}))";
-        $rqlQueryObject = $this->parseRql($rql);
+        $rqlQueryObject = $this->rqlParser->rqlDecoder($rql);
 
         $rows = $this->object->query($rqlQueryObject);
         $this->assertEquals(60, count($rows));
@@ -93,7 +88,7 @@ class TimelineTest extends \PHPUnit_Framework_TestCase
     {
         $from = UTCTime::getUTCTimestamp(0) + 10;
         $rql = "le(timestamp,{$from})";
-        $rqlQueryObject = $this->parseRql($rql);
+        $rqlQueryObject = $this->rqlParser->rqlDecoder($rql);
 
         $rows = $this->object->query($rqlQueryObject);
         $this->assertEquals(10, count($rows));
@@ -105,7 +100,7 @@ class TimelineTest extends \PHPUnit_Framework_TestCase
         $to = $from + 58;
         $minute = date('i', $from);
         $rql = "and(or(eq(minutes," . $minute . "),eq(minutes," . ($minute + 1) . ")),lt(timestamp,{$to}))";
-        $rqlQueryObject = $this->parseRql($rql);
+        $rqlQueryObject = $this->rqlParser->rqlDecoder($rql);
 
         $rows = $this->object->query($rqlQueryObject);
         $this->assertEquals(1, count($rows));
@@ -117,7 +112,7 @@ class TimelineTest extends \PHPUnit_Framework_TestCase
         $to = UTCTime::getUTCTimestamp(0) + 1;
 
         $rql = "and(or(eq(id,{$id}),eq(id," . ($id + 0.5) . ")),le(timestamp,{$to}))";
-        $rqlQueryObject = $this->parseRql($rql);
+        $rqlQueryObject = $this->rqlParser->rqlDecoder($rql);
         $rows = $this->object->query($rqlQueryObject);
 
         $this->assertEquals(2, count($rows));
@@ -149,7 +144,7 @@ class TimelineTest extends \PHPUnit_Framework_TestCase
             $rql .= "),eq(seconds,";
         }
         $rql = rtrim($rql, "),eq(seconds,") . ")),ge(timestamp," . $from . "))&limit(5,0)";
-        $rqlQueryObject = $this->parseRql($rql);
+        $rqlQueryObject = $this->rqlParser->rqlDecoder($rql);
         $timelineDsRows = $this->object->query($rqlQueryObject);
 
         $this->assertEquals($timeline, $timelineDsRows);

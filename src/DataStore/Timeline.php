@@ -151,7 +151,7 @@ class Timeline extends DataStoreAbstract
      */
     public function query(Query $query)
     {
-        $this->determineStep($query);
+        $this->setStep($this->determineStep($query));
         $this->determineFrom($query);
         return parent::query($query);
     }
@@ -160,7 +160,7 @@ class Timeline extends DataStoreAbstract
      * Determines the "from" and "number" values from rql query analizing nodes for field "timestamp"
      * @param Query $query
      */
-    public function determineFrom(Query $query)
+    protected function determineFrom(Query $query)
     {
         $rootNode = $query->getQuery();
         // If RQL-query match pattern 'ge|gt|le|lt|eq(timestamp,<timestamp>)'
@@ -184,20 +184,20 @@ class Timeline extends DataStoreAbstract
     {
         // If RQL-query match pattern 'and(<restRqlQuery>,ge|gt(timestamp,<timestamp>))', use this value for 'from'
         if (in_array($rootNode->getNodeName(), ['ge', 'gt'])) {
-            if ('timestamp' == $rootNode->getField()) {
+            if (in_array($rootNode->getField(), ['id', 'timestamp'])) {
                 $from = $rootNode->getValue();
             }
         }
         // If RQL-query match pattern 'and(<restRqlQuery>,le|lt(timestamp,<timestamp>))', use this value for 'number'
         if (in_array($rootNode->getNodeName(), ['le', 'lt'])) {
-            if ('timestamp' == $rootNode->getField()) {
+            if (in_array($rootNode->getField(), ['id', 'timestamp'])) {
                 $to = $rootNode->getValue();
             }
         }
         // If RQL-query match pattern 'and(<restRqlQuery>,eq(timestamp,<timestamp>))',
         // use this value for both 'from' and 'number'
         if ('eq' == $rootNode->getNodeName()) {
-            if ('timestamp' == $rootNode->getField()) {
+            if (in_array($rootNode->getField(), ['id', 'timestamp'])) {
                 $from = $rootNode->getValue();
                 $to = $rootNode->getValue();
             }
@@ -220,15 +220,16 @@ class Timeline extends DataStoreAbstract
      * @param Query $query
      * @throws TimelineDataStoreException
      */
-    protected function determineStep(Query $query)
+    public function determineStep(Query $query)
     {
         // TODO: When Query-class will have a method which will build rql-string from rql-object this vethod will require refactoring
         $timeWeights = $this->collectAllTimeWeights($query->getQuery());
         if (!count($timeWeights)) {
-            $this->setStep(self::DEFAULT_STEP);
+            $step = self::DEFAULT_STEP;
         } else {
-            $this->setStep(min($timeWeights));
+            $step = min($timeWeights);
         }
+        return $step;
     }
 
     /**

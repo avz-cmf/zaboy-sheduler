@@ -2,15 +2,14 @@
 
 namespace zaboy\scheduler\Scheduler;
 
-use zaboy\scheduler\Callback\CallbackAbstract;
+use zaboy\rest\RqlParser\RqlParser;
+use zaboy\scheduler\Callback\CallbackManager;
 use zaboy\scheduler\Callback\Interfaces\CallbackInterface;
 use zaboy\scheduler\DataStore\Timeline;
 use Xiag\Rql\Parser\Query;
 use zaboy\rest\DataStore\DataStoreAbstract;
 use Xiag\Rql\Parser\Node\Query\ScalarOperator;
 use Xiag\Rql\Parser\Node\Query\LogicOperator;
-use Xiag\Rql\Parser\Lexer;
-use Xiag\Rql\Parser\Parser;
 
 class Scheduler
 {
@@ -20,66 +19,91 @@ class Scheduler
     /** @var  \zaboy\scheduler\DataStore\Timeline $timelineDs */
     protected $timelineDs;
 
+    /** @var  array $filters */
+    protected $filters;
+
+    /** @var \zaboy\scheduler\Callback\CallbackManager $callbackManager */
+    protected $callbackManager;
+
     /**
      * Scheduler constructor.
+     *
+     * @param DataStoreAbstract $filterDs
+     * @param Timeline $timelineDs
+     * @param CallbackManager $callbackManager
      */
-    public function __construct(DataStoreAbstract $filterDs, Timeline $timelineDs)
+    public function __construct(DataStoreAbstract $filterDs, Timeline $timelineDs, CallbackManager $callbackManager)
     {
         $this->filterDs = $filterDs;
         $this->timelineDs = $timelineDs;
+        $this->callbackManager = $callbackManager;
     }
 
-    protected function parseRql($rql)
-    {
-        $lexer = new Lexer();
-        $parser = Parser::createDefault();
-        $tokens = $lexer->tokenize($rql);
-        /* @var $rqlQueryObject \Xiag\Rql\Parser\Query */
-        $rqlQueryObject = $parser->parse($tokens);
-        return $rqlQueryObject;
-    }
-
+    /**
+     * Adds limits to query for limiting time range
+     *
+     * @param Query $query
+     * @param $tickId
+     * @param $step
+     * @return Query
+     */
     protected function addTickLimit(Query $query, $tickId, $step)
     {
+        $field = ($step < 1) ? 'id' : 'timestamp';
         $andNode = new LogicOperator\AndNode([
             $query->getQuery(),
-            new ScalarOperator\GeNode('timestamp', $tickId),
-            new ScalarOperator\LtNode('timestamp', $tickId + $step),
+            new ScalarOperator\GeNode($field, $tickId),
+            new ScalarOperator\LtNode($field, $tickId + $step),
         ]);
         $query->setQuery($andNode);
         return $query;
     }
 
+    /**
+     * Hop callback which called from Ticker
+     *
+     * @param $hopId
+     * @param $ttl
+     */
     public function processHop($hopId, $ttl)
     {
-        // do nothing at the moment
-    }
-
-
-    public function processTick($tickId, $step)
-    {
+        /**
+         * One more reads active filters from DataStore and further use it ever tick
+         */
         $query = new Query();
         $query->setQuery(
             new ScalarOperator\EqNode('active', 1)
         );
-        $filters = $this->filterDs->query($query);
-        foreach ($filters as $filter) {
-            $rqlQueryObject = $this->parseRql($filter['rql']);
+        $this->filters = $this->filterDs->query($query);
+    }
+
+    /**
+     * Tick callback which called from Ticker
+     *
+     * @param $tickId
+     * @param $step
+     * @throws SchedulerException
+     * @throws \zaboy\scheduler\Callback\CallbackException
+     */
+    public function processTick($tickId, $step)
+    {
+        $rqlParser = new RqlParser();
+        foreach ($this->filters as $filter) {
+            // Parses rql-query expression
+            $rqlQueryObject = $rqlParser->rqlDecoder($filter['rql']);
+            // Step value determined in Timeline DataStore
+            if ($this->timelineDs->determineStep($rqlQueryObject) < $step) {
+                throw new SchedulerException("The step determined from query to timeline DataStore is less than step given from Ticker");
+            }
+            // Adds time limits and executes query to timeline
             $rqlQueryObject = $this->addTickLimit($rqlQueryObject, $tickId, $step);
             $matches = $this->timelineDs->query($rqlQueryObject);
+            // If mathces were found runs their callbacks
             if (count($matches)) {
                 /** @var CallbackInterface $instance */
-                $instance = CallbackAbstract::factory($filter['callback']);
+                $instance = $this->callbackManager->get($filter['callback']);
                 $instance->call(['tick_id' => $tickId, 'step' => $step]);
             }
         }
     }
-
-    protected function getLogger()
-    {
-        $container = include './config/container.php';
-        $log = $container->get('hop_log_datastore');
-        return $log;
-    }
-
 }

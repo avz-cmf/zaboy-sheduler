@@ -20,26 +20,27 @@ class SchedulerTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->container = include './config/container.php';
-        $this->filterDs = $this->container->get('test_scheduler_filters_datastore');
+//        $this->filterDs = $this->container->get('test_scheduler_filters_datastore');
+        $this->filterDs = $this->container->get('filters_datastore');
 
         $this->log = $this->container->get('tick_log_datastore');
         $this->log->deleteAll();
 
-        $this->setFilters();
+//        $this->setFilters();
     }
 
     protected function setFilters()
     {
         $this->filterDs->deleteAll();
         $filterData = [
-            'rql' => 'or(eq(seconds,3),eq(seconds,8),eq(seconds,10),eq(seconds,15),eq(seconds,20),eq(seconds,23),eq(seconds,33),eq(seconds,41),eq(seconds,55),eq(seconds,59))',
+            'rql' => 'in(seconds,(3,8,10,15,20,23,33,41,55,59))',
             'callback' => 'tick_callback',
             'active' => 1
         ];
         $this->filterDs->create($filterData);
 
         $filterData = [
-            'rql' => 'or(eq(seconds,4),eq(seconds,9),eq(seconds,11),eq(seconds,16),eq(seconds,21),eq(seconds,24),eq(seconds,34),eq(seconds,42),eq(seconds,56))',
+            'rql' => 'in(seconds,(4,9,11,16,21,24,34,42,56))',
             'callback' => 'tick_callback',
             'active' => 1
         ];
@@ -67,5 +68,25 @@ class SchedulerTest extends \PHPUnit_Framework_TestCase
         $this->setTicker()
             ->start();
         $this->assertEquals(19, $this->log->count());
+    }
+
+    public function test_withStepInQueryLessThanStepFromTicker()
+    {
+        $this->setExpectedExceptionRegExp('zaboy\scheduler\Scheduler\SchedulerException');
+        $filterData = [
+            'id' => 3,
+            'rql' => 'and(in(seconds,(4,9,11,16,21,24,34,42,56)),eq(tp_seconds,0))',
+            'callback' => 'tick_callback',
+            'active' => 1
+        ];
+        $item = $this->filterDs->create($filterData, true);
+        try {
+            $this->setTicker()
+                ->start();
+        } catch (\Exception $e) {
+            throw new \zaboy\scheduler\Scheduler\SchedulerException($e->getMessage(), $e->getCode());
+        } finally {
+            $this->filterDs->delete($item['id']);
+        }
     }
 }
