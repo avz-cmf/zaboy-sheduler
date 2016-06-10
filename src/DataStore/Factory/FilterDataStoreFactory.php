@@ -4,10 +4,10 @@ namespace zaboy\scheduler\DataStore\Factory;
 
 use zaboy\rest\DataStore\DataStoreException;
 use zaboy\rest\DataStore\DbTable;
+use zaboy\scheduler\AbstractFactory;
 use Zend\Db\Metadata;
 use Zend\Db\Sql\Ddl\CreateTable;
 use Zend\Db\TableGateway\TableGateway;
-use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Db\Sql\Ddl\Column;
 use Zend\Db\Sql\Ddl\Constraint;
@@ -48,7 +48,7 @@ use Zend\Db\Sql\Sql;
  * Class ScriptAbstractFactory
  * @package zaboy\scheduler\Callback\Factory
  */
-class FilterDataStoreFactory implements FactoryInterface
+class FilterDataStoreFactory extends AbstractFactory
 {
     const TABLE_NAME = 'filters';
 
@@ -59,11 +59,11 @@ class FilterDataStoreFactory implements FactoryInterface
     protected $dataStore;
 
     /**
-     * {@inheritdoc}
+     * {@inherit}
      *
-     * {@inheritdoc}
+     * {@inherit}
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ServiceLocatorInterface $serviceLocator)
     {
         $this->db = $serviceLocator->has('db') ? $serviceLocator->get('db') : null;
         if (is_null($this->db)) {

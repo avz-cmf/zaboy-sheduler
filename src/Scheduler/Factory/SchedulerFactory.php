@@ -2,9 +2,9 @@
 
 namespace zaboy\scheduler\Scheduler\Factory;
 
+use zaboy\scheduler\AbstractFactory;
 use zaboy\scheduler\Scheduler\Scheduler;
 use zaboy\scheduler\Scheduler\SchedulerException;
-use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -23,9 +23,14 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * Class ScriptAbstractFactory
  * @package zaboy\scheduler\Callback\Factory
  */
-class SchedulerFactory implements FactoryInterface
+class SchedulerFactory extends AbstractFactory
 {
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    /**
+     * {@inherit}
+     *
+     * {@inherit}
+     */
+    public function __invoke(ServiceLocatorInterface $serviceLocator)
     {
         if (!$serviceLocator->has('filters_datastore')) {
             throw new SchedulerException("Can't create datastore of filters because it does not described in config.");
@@ -47,5 +52,4 @@ class SchedulerFactory implements FactoryInterface
         $instance = new Scheduler($filterDs, $timelineDs, $callbackManager);
         return $instance;
     }
-
 }

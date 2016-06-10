@@ -2,6 +2,7 @@
 
 namespace zaboy\scheduler\Callback\Factory;
 
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -27,14 +28,14 @@ class InstanceAbstractFactory extends AbstractFactoryAbstract
 {
     const CLASS_IS_A = 'zaboy\scheduler\Callback\Instance';
 
-    public function createServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $config = $serviceLocator->get('config')['callback'];
+        $config = $container->get('config')['callback'];
         $serviceConfig = $config[$requestedName];
         // Class of callback object, will be 'zaboy\scheduler\Callback\Instance'
         $requestedClassName = $serviceConfig['class'];
         // The first parameter which the callback object gets is instance which method it calls
-        $dependencyInstance = $serviceLocator->get($serviceConfig['params']['instanceServiceName']);
+        $dependencyInstance = $container->get($serviceConfig['params']['instanceServiceName']);
         // Second parameter is name of method for call
         $methodName = $serviceConfig['params']['instanceMethodName'];
 
@@ -44,6 +45,4 @@ class InstanceAbstractFactory extends AbstractFactoryAbstract
         ]);
         return $instance;
     }
-
-
 }

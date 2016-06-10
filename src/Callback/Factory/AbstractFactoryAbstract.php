@@ -2,10 +2,7 @@
 
 namespace zaboy\scheduler\Callback\Factory;
 
-use zaboy\scheduler\Callback\Script;
-use Zend\ServiceManager\AbstractFactoryInterface;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 
 /**
  * The abstract factory for all types of callbaks
@@ -13,7 +10,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * Class AbstractFactoryAbstract
  * @package zaboy\scheduler\Callback\Factory
  */
-abstract class AbstractFactoryAbstract implements AbstractFactoryInterface
+abstract class AbstractFactoryAbstract extends \zaboy\rest\AbstractFactoryAbstract
 {
     const CLASS_IS_A = '';
 
@@ -22,9 +19,9 @@ abstract class AbstractFactoryAbstract implements AbstractFactoryInterface
      *
      * {@inherit}
      */
-    public function canCreateServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
+    public function canCreate(ContainerInterface $container, $requestedName)
     {
-        $config = $serviceLocator->get('config')['callback'];
+        $config = $container->get('config')['callback'];
         if (!isset($config[$requestedName]['class'])) {
             return false;
         }
@@ -37,9 +34,9 @@ abstract class AbstractFactoryAbstract implements AbstractFactoryInterface
      *
      * {@inherit}
      */
-    public function createServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $config = $serviceLocator->get('config')['callback'];
+        $config = $container->get('config')['callback'];
         $serviceConfig = $config[$requestedName];
         $requestedClassName = $serviceConfig['class'];
         $params = $serviceConfig['params'];

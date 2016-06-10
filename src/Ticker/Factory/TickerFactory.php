@@ -2,9 +2,9 @@
 
 namespace zaboy\scheduler\Ticker\Factory;
 
+use zaboy\scheduler\AbstractFactory;
 use zaboy\scheduler\Callback\CallbackException;
 use zaboy\scheduler\Callback\CallbackManager;
-use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use zaboy\scheduler\Ticker\Ticker;
 
@@ -28,11 +28,16 @@ use zaboy\scheduler\Ticker\Ticker;
  * Class ScriptAbstractFactory
  * @package zaboy\scheduler\Callback\Factory
  */
-class TickerFactory implements FactoryInterface
+class TickerFactory extends AbstractFactory
 {
     const TICKER_SERVICE_NAME = 'ticker';
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    /**
+     * {@inherit}
+     *
+     * {@inherit}
+     */
+    public function __invoke(ServiceLocatorInterface $serviceLocator)
     {
         $config = $serviceLocator->get('config')[self::TICKER_SERVICE_NAME];
 
