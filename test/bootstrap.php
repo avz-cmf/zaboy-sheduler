@@ -7,4 +7,3 @@ chdir(dirname(__DIR__));
 
 // Setup autoloading
 require './vendor/autoload.php';
-var_dump('$expressionkkkkkkkkkkkkkkkkkkkkkkkk');
